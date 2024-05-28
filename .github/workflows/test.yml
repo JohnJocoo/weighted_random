@@ -6,8 +6,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        id: beam
         with:
           otp-version: '26.2'
           elixir-version: '1.16.3'

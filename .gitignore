@@ -12,6 +12,7 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 weighted_random-*.tar
+better_weighted_random-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/

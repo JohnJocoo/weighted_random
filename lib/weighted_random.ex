@@ -14,7 +14,7 @@ defmodule WeightedRandom do
   defstruct [:search_table, :total_weight, :number_elements]
 
   @doc """
-  Turn enumerable of {weight, element} to structure optimised for search (take_* operations).
+  Turn enumerable of {element, weight} to structure optimised for search (take_* operations).
   """
   @spec create_searcher(enumerable({element(), weight()})) :: searcher()
   def create_searcher(enumerable) do

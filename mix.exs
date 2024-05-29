@@ -3,11 +3,13 @@ defmodule WeightedRandom.MixProject do
 
   def project do
     [
-      app: :weighted_random,
+      app: :better_weighted_random,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package()
     ]
   end
 
@@ -21,9 +23,27 @@ defmodule WeightedRandom.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      {:stream_data, "~> 1.0", only: :test}
+      {:stream_data, "~> 1.0", only: :test},
+      {:ex_doc, "~> 0.33", only: :dev, runtime: false},
+      {:earmark, "~> 1.4", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.4", only: :dev, runtime: false},
+      {:benchee, "~> 1.0", only: :dev}
     ]
+  end
+
+  defp description do
+    """
+    Weighted random pick library optimised for quick take_one and take_n operations.
+    """
+  end
+
+  defp package do
+    [
+     files: ["lib", "mix.exs", "README.md"],
+     maintainers: ["Anton Frolov"],
+     licenses: ["Apache 2.0"],
+     links: %{"GitHub" => "https://github.com/JohnJocoo/weighted_random",
+              "Docs" => "https://hexdocs.pm/better_weighted_random/"}
+     ]
   end
 end

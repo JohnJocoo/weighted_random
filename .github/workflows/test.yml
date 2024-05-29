@@ -12,5 +12,36 @@ jobs:
         with:
           otp-version: '26.2'
           elixir-version: '1.16.3'
+      - uses: actions/cache@v3
+        with:
+          path: |
+            deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - run: mix deps.get
+      - run: mix format --check-formatted
+      - name: Restore PLT cache
+        id: plt_cache
+        uses: actions/cache/restore@v3
+        with:
+          key: |
+            ${{ runner.os }}-plt-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-plt-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-mix-${{ hashFiles('**/mix.lock') }}
+          path: |
+            priv/plts
+      - name: Create PLTs if cache not found
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        run: mix dialyzer --plt
+      - name: Save PLT cache
+        id: plt_cache_save
+        uses: actions/cache/save@v3
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        with:
+          key: |
+            ${{ runner.os }}-plt-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-mix-${{ hashFiles('**/mix.lock') }}
+          path: |
+            priv/plts
+      - run: mix dialyzer
       - run: mix test

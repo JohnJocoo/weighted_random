@@ -31,7 +31,9 @@ defmodule WeightedRandomTest do
 
     test "with many same elements" do
       assert :element == WeightedRandom.take_one([{:element, 0.5}, {:element, 1.5}])
-      assert :element == WeightedRandom.take_one([{:element, 0.5}, {:element, 1.5}, {:element, 1.0}])
+
+      assert :element ==
+               WeightedRandom.take_one([{:element, 0.5}, {:element, 1.5}, {:element, 1.0}])
     end
 
     test "statistically returns elements based on weights" do
@@ -89,7 +91,8 @@ defmodule WeightedRandomTest do
 
     test "smoke test" do
       check all(
-              weights <- StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
+              weights <-
+                StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
               items <- StreamData.list_of(StreamData.term(), length: length(weights))
             ) do
         data = Enum.zip(items, weights)
@@ -129,12 +132,18 @@ defmodule WeightedRandomTest do
     end
 
     test "with one element returns it" do
-      assert :element == WeightedRandom.create_searcher([{:element, 1.0}]) |> WeightedRandom.take_one()
+      assert :element ==
+               WeightedRandom.create_searcher([{:element, 1.0}]) |> WeightedRandom.take_one()
     end
 
     test "with many same elements" do
-      assert :element == WeightedRandom.create_searcher([{:element, 0.5}, {:element, 1.5}]) |> WeightedRandom.take_one()
-      assert :element == WeightedRandom.create_searcher([{:element, 0.5}, {:element, 1.5}, {:element, 1.0}]) |> WeightedRandom.take_one()
+      assert :element ==
+               WeightedRandom.create_searcher([{:element, 0.5}, {:element, 1.5}])
+               |> WeightedRandom.take_one()
+
+      assert :element ==
+               WeightedRandom.create_searcher([{:element, 0.5}, {:element, 1.5}, {:element, 1.0}])
+               |> WeightedRandom.take_one()
     end
 
     test "statistically returns elements based on weights" do
@@ -192,7 +201,8 @@ defmodule WeightedRandomTest do
 
     test "smoke test" do
       check all(
-              weights <- StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
+              weights <-
+                StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
               items <- StreamData.list_of(StreamData.term(), length: length(weights))
             ) do
         data =
@@ -235,7 +245,8 @@ defmodule WeightedRandomTest do
     end
 
     test "with number = 1 return one from list (same elements)" do
-      assert [:element] == WeightedRandom.take_n([{:element, 1.0}, {:element, 1.0}, {:element, 1.0}], 1)
+      assert [:element] ==
+               WeightedRandom.take_n([{:element, 1.0}, {:element, 1.0}, {:element, 1.0}], 1)
     end
 
     test "with number = 1 return one from list" do
@@ -253,7 +264,13 @@ defmodule WeightedRandomTest do
 
     test "do not pick elements again (be aware of duplicates in data)" do
       data_low = Enum.map(1..200, fn i -> {:"element_#{i}", 0.0001} end)
-      elements = WeightedRandom.take_n([{:element_big, 10.0} | [{:element_big, 10.0} | [{:element_big, 1.0} | data_low]]], 100)
+
+      elements =
+        WeightedRandom.take_n(
+          [{:element_big, 10.0} | [{:element_big, 10.0} | [{:element_big, 1.0} | data_low]]],
+          100
+        )
+
       assert length(elements) == 100
       assert Enum.member?(elements, :element_big)
       assert 3 == Enum.count(elements, fn el -> el == :element_big end)
@@ -268,7 +285,9 @@ defmodule WeightedRandomTest do
     end
 
     test "do not pick elements again (size = number), one big" do
-      elements = WeightedRandom.take_n([{:element1, 100.0}, {:element2, 1.0}, {:element3, 1.0}], 3)
+      elements =
+        WeightedRandom.take_n([{:element1, 100.0}, {:element2, 1.0}, {:element3, 1.0}], 3)
+
       assert length(elements) == 3
       assert Enum.member?(elements, :element1)
       assert Enum.member?(elements, :element2)
@@ -284,7 +303,9 @@ defmodule WeightedRandomTest do
     end
 
     test "do not pick elements again (size = number), (be aware of duplicates in data), one big" do
-      elements = WeightedRandom.take_n([{:element1, 1.0}, {:element2, 100.0}, {:element2, 1.0}], 3)
+      elements =
+        WeightedRandom.take_n([{:element1, 1.0}, {:element2, 100.0}, {:element2, 1.0}], 3)
+
       assert length(elements) == 3
       assert Enum.member?(elements, :element1)
       assert Enum.member?(elements, :element2)
@@ -292,7 +313,9 @@ defmodule WeightedRandomTest do
     end
 
     test "do not pick elements again (size < number)" do
-      elements = WeightedRandom.take_n([{:element1, 1.0}, {:element2, 1.0}, {:element3, 1.0}], 100)
+      elements =
+        WeightedRandom.take_n([{:element1, 1.0}, {:element2, 1.0}, {:element3, 1.0}], 100)
+
       assert length(elements) == 3
       assert Enum.member?(elements, :element1)
       assert Enum.member?(elements, :element2)
@@ -300,7 +323,9 @@ defmodule WeightedRandomTest do
     end
 
     test "do not pick elements again (size < number), one big" do
-      elements = WeightedRandom.take_n([{:element1, 100.0}, {:element2, 1.0}, {:element3, 1.0}], 100)
+      elements =
+        WeightedRandom.take_n([{:element1, 100.0}, {:element2, 1.0}, {:element3, 1.0}], 100)
+
       assert length(elements) == 3
       assert Enum.member?(elements, :element1)
       assert Enum.member?(elements, :element2)
@@ -308,7 +333,9 @@ defmodule WeightedRandomTest do
     end
 
     test "do not pick elements again (size < number), (be aware of duplicates in data)" do
-      elements = WeightedRandom.take_n([{:element1, 1.0}, {:element2, 1.0}, {:element2, 1.0}], 100)
+      elements =
+        WeightedRandom.take_n([{:element1, 1.0}, {:element2, 1.0}, {:element2, 1.0}], 100)
+
       assert length(elements) == 3
       assert Enum.member?(elements, :element1)
       assert Enum.member?(elements, :element2)
@@ -316,7 +343,9 @@ defmodule WeightedRandomTest do
     end
 
     test "do not pick elements again (size < number), (be aware of duplicates in data), one big" do
-      elements = WeightedRandom.take_n([{:element1, 1.0}, {:element2, 100.0}, {:element2, 1.0}], 100)
+      elements =
+        WeightedRandom.take_n([{:element1, 1.0}, {:element2, 100.0}, {:element2, 1.0}], 100)
+
       assert length(elements) == 3
       assert Enum.member?(elements, :element1)
       assert Enum.member?(elements, :element2)
@@ -386,7 +415,8 @@ defmodule WeightedRandomTest do
 
     test "smoke test" do
       check all(
-              weights <- StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
+              weights <-
+                StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
               items <- StreamData.list_of(StreamData.term(), length: length(weights)),
               take_n <- StreamData.integer(1..10)
             ) do
@@ -432,7 +462,10 @@ defmodule WeightedRandomTest do
     test "with number = 0, return empty list" do
       assert [] == WeightedRandom.create_searcher([]) |> WeightedRandom.take_n(0)
       assert [] == WeightedRandom.create_searcher([{:element, 1.0}]) |> WeightedRandom.take_n(0)
-      assert [] == WeightedRandom.create_searcher([{:element1, 1.0}, {:element2, 1.0}]) |> WeightedRandom.take_n(0)
+
+      assert [] ==
+               WeightedRandom.create_searcher([{:element1, 1.0}, {:element2, 1.0}])
+               |> WeightedRandom.take_n(0)
     end
 
     test "with number = 1 return one from list (same elements)" do
@@ -465,7 +498,9 @@ defmodule WeightedRandomTest do
       data_low = Enum.map(1..200, fn i -> {:"element_#{i}", 0.0001} end)
 
       elements =
-        WeightedRandom.create_searcher([{:element_big, 10.0} | [{:element_big, 10.0} | [{:element_big, 1.0} | data_low]]])
+        WeightedRandom.create_searcher([
+          {:element_big, 10.0} | [{:element_big, 10.0} | [{:element_big, 1.0} | data_low]]
+        ])
         |> WeightedRandom.take_n(100)
 
       assert length(elements) == 100
@@ -627,7 +662,8 @@ defmodule WeightedRandomTest do
 
     test "smoke test" do
       check all(
-              weights <- StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
+              weights <-
+                StreamData.list_of(StreamData.float(min: 0.1, max: 100.0), min_length: 1),
               items <- StreamData.list_of(StreamData.term(), length: length(weights)),
               take_n <- StreamData.integer(1..10)
             ) do

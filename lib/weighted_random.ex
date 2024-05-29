@@ -66,10 +66,14 @@ defmodule WeightedRandom do
     number_to_take = min(number, number_elements)
 
     {elements, _, _, _} =
-      Enum.reduce(1..number_to_take, {[], searcher, MapSet.new(), 0.0}, fn _, {res, searcher, excluded, excluded_weight} ->
+      Enum.reduce(1..number_to_take, {[], searcher, MapSet.new(), 0.0}, fn _,
+                                                                           {res, searcher,
+                                                                            excluded,
+                                                                            excluded_weight} ->
         case take_one_excluded(searcher, excluded, excluded_weight, 0) do
           {:ok, {{key, weight}, element}, new_searcher, new_excluded, new_excluded_weight} ->
-            {[element | res], new_searcher, MapSet.put(new_excluded, key), new_excluded_weight + weight}
+            {[element | res], new_searcher, MapSet.put(new_excluded, key),
+             new_excluded_weight + weight}
 
           {:error, _} ->
             {res, searcher, excluded, excluded_weight}
@@ -118,7 +122,10 @@ defmodule WeightedRandom do
       end)
 
     {
-      [{:neg_inf, :assert_can_not_happen} | Enum.reverse([{total_weight, :assert_can_not_happen} | elements_list])],
+      [
+        {:neg_inf, :assert_can_not_happen}
+        | Enum.reverse([{total_weight, :assert_can_not_happen} | elements_list])
+      ],
       total_weight
     }
   end

@@ -39,11 +39,13 @@ defmodule WeightedRandom.MixProject do
 
   defp package do
     [
-     files: ["lib", "mix.exs", "README.md"],
-     maintainers: ["Anton Frolov"],
-     licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/JohnJocoo/weighted_random",
-              "Docs" => "https://hexdocs.pm/better_weighted_random/"}
-     ]
+      files: ["lib", "mix.exs", "README.md"],
+      maintainers: ["Anton Frolov"],
+      licenses: ["Apache 2.0"],
+      links: %{
+        "GitHub" => "https://github.com/JohnJocoo/weighted_random",
+        "Docs" => "https://hexdocs.pm/better_weighted_random/"
+      }
+    ]
   end
 end

@@ -80,7 +80,9 @@ defmodule WeightedRandom.SearchTable do
   defp build_subtree([{lower_bound, element}]), do: {lower_bound, element, nil, nil}
 
   defp build_subtree(table) do
-    {left_table, [{lower_bound, element} | right_table]} = Enum.split(table, round(length(table) / 2) - 1)
+    {left_table, [{lower_bound, element} | right_table]} =
+      Enum.split(table, round(length(table) / 2) - 1)
+
     left_subtree = build_subtree(left_table)
     right_subtree = build_subtree(right_table)
 
@@ -89,7 +91,11 @@ defmodule WeightedRandom.SearchTable do
 
   defp search_subtree(nil, _search_value, current_element), do: current_element
 
-  defp search_subtree({lower_bound, new_element, left_subtree, right_subtree}, search_value, current_element) do
+  defp search_subtree(
+         {lower_bound, new_element, left_subtree, right_subtree},
+         search_value,
+         current_element
+       ) do
     if is_less_lower_bound(lower_bound, search_value) do
       search_subtree(left_subtree, search_value, current_element)
     else

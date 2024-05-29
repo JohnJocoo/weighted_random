@@ -50,8 +50,11 @@ defmodule WeightedRandom.SearchTableTest do
     end
 
     test "negative ranges lower bound is not inclusive" do
-      assert 1 == SearchTable.compile([{:neg_inf, 1}, {-10, 2}, {-5, 3}]) |> SearchTable.search(-10)
-      assert 2 == SearchTable.compile([{:neg_inf, 1}, {-10, 2}, {-5, 3}]) |> SearchTable.search(-5)
+      assert 1 ==
+               SearchTable.compile([{:neg_inf, 1}, {-10, 2}, {-5, 3}]) |> SearchTable.search(-10)
+
+      assert 2 ==
+               SearchTable.compile([{:neg_inf, 1}, {-10, 2}, {-5, 3}]) |> SearchTable.search(-5)
     end
 
     test "positive ranges lower bound is inclusive" do
